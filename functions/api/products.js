@@ -21,7 +21,10 @@ export async function onRequestGet(context) {
     return Response.json(results);
   } catch (error) {
     return Response.json(
-      { error: "Failed to load products" },
+      {
+        error: "Failed to load products",
+        details: error?.message || String(error)
+      },
       { status: 500 }
     );
   }
