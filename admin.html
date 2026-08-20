@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechSpot PH — Admin</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #050505;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  padding: 20px 6%;
+  border-bottom: 1px solid #222;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.blue {
+  color: #1683ff;
+}
+
+.logout {
+  background: #222;
+  color: white;
+  border: 1px solid #444;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+main {
+  padding: 40px 6%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+h1 {
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: #999;
+  margin-bottom: 30px;
+}
+
+.panel {
+  background: #0d0d0d;
+  border: 1px solid #252525;
+  border-radius: 18px;
+  padding: 25px;
+  margin-bottom: 25px;
+}
+
+.panel h2 {
+  margin-top: 0;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.field.full {
+  grid-column: 1 / -1;
+}
+
+label {
+  color: #aaa;
+  font-size: 14px;
+}
+
+input,
+textarea {
+  width: 100%;
+  background: #080808;
+  border: 1px solid #333;
+  color: white;
+  border-radius: 10px;
+  padding: 13px;
+  font-size: 16px;
+  outline: none;
+}
+
+textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #1683ff;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-weight: 700;
+}
+
+.primary {
+  background: #087ff5;
+  color: white;
+}
+
+.secondary {
+  background: #222;
+  color: white;
+}
+
+.products {
+  display: grid;
+  gap: 12px;
+}
+
+.product {
+  background: #111;
+  border: 1px solid #292929;
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+}
+
+.product-info h3 {
+  margin: 0 0 7px;
+}
+
+.product-info p {
+  margin: 4px 0;
+  color: #aaa;
+}
+
+.product-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.edit {
+  background: #1683ff;
+  color: white;
+}
+
+.delete {
+  background: #8b1e1e;
+  color: white;
+}
+
+.status {
+  padding: 12px;
+  border-radius: 10px;
+  background: #101010;
+  color: #aaa;
+  margin-bottom: 20px;
+  display: none;
+}
+
+@media (max-width: 700px) {
+
+  header {
+    padding: 18px 5%;
+  }
+
+  main {
+    padding: 30px 5%;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field.full {
+    grid-column: auto;
+  }
+
+  .product {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .product-actions {
+    width: 100%;
+  }
+
+  .product-actions button {
+    flex: 1;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+  <div class="logo">
+    TECH<span class="blue">SPOT</span> PH — ADMIN
+  </div>
+
+  <button
+    class="logout"
+    onclick="logout()"
+  >
+    LOG OUT
+  </button>
+
+</header>
+
+
+<main>
+
+<h1>Admin Dashboard</h1>
+
+<div class="subtitle">
+  Manage your TechSpot PH products.
+</div>
+
+
+<div
+  id="status"
+  class="status"
+></div>
+
+
+<section class="panel">
+
+  <h2 id="formTitle">
+    Add Product
+  </h2>
+
+  <input
+    type="hidden"
+    id="productId"
+  >
+
+  <div class="form-grid">
+
+    <div class="field">
+
+      <label>Product Name</label>
+
+      <input
+        id="name"
+        type="text"
+        placeholder="iPhone 13"
+      >
+
+    </div>
+
+
+    <div class="field">
+
+      <label>Price</label>
+
+      <input
+        id="price"
+        type="number"
+        placeholder="25000"
+      >
+
+    </div>
+
+
+    <div class="field">
+
+      <label>Rating</label>
+
+      <input
+        id="rating"
+        type="number"
+        min="0"
+        max="5"
+        step="0.1"
+        placeholder="5"
+      >
+
+    </div>
+
+
+    <div class="field">
+
+      <label>Rating Count</label>
+
+      <input
+        id="ratingCount"
+        type="number"
+        min="0"
+        placeholder="200"
+      >
+
+    </div>
+
+
+    <div class="field">
+
+      <label>Stock</label>
+
+      <input
+        id="stock"
+        type="number"
+        min="0"
+        placeholder="10"
+      >
+
+    </div>
+
+
+    <div class="field">
+
+      <label>Image URL</label>
+
+      <input
+        id="imageUrl"
+        type="url"
+        placeholder="https://..."
+      >
+
+    </div>
+
+
+    <div class="field full">
+
+      <label>Description</label>
+
+      <textarea
+        id="description"
+        placeholder="Product description..."
+      ></textarea>
+
+    </div>
+
+  </div>
+
+
+  <div class="actions">
+
+    <button
+      class="primary"
+      onclick="saveProduct()"
+    >
+      SAVE PRODUCT
+    </button>
+
+    <button
+      class="secondary"
+      onclick="clearForm()"
+    >
+      CLEAR
+    </button>
+
+  </div>
+
+</section>
+
+
+<section class="panel">
+
+  <h2>Products</h2>
+
+  <div
+    id="products"
+    class="products"
+  >
+    Loading...
+  </div>
+
+</section>
+
+</main>
+
+
+<script>
+
+const API_URL = "/api/products";
+
+let products = [];
+
+
+function showStatus(message) {
+
+  const status =
+    document.getElementById("status");
+
+  status.textContent = message;
+  status.style.display = "block";
+
+  setTimeout(function() {
+    status.style.display = "none";
+  }, 3000);
+}
+
+
+function clearForm() {
+
+  document.getElementById("productId").value = "";
+  document.getElementById("name").value = "";
+  document.getElementById("price").value = "";
+  document.getElementById("rating").value = "";
+  document.getElementById("ratingCount").value = "";
+  document.getElementById("stock").value = "";
+  document.getElementById("imageUrl").value = "";
+  document.getElementById("description").value = "";
+
+  document.getElementById("formTitle").textContent =
+    "Add Product";
+}
+
+
+async function loadProducts() {
+
+  try {
+
+    const response =
+      await fetch(API_URL, {
+        cache: "no-store"
+      });
+
+    if (!response.ok) {
+      throw new Error("Failed to load products");
+    }
+
+    products = await response.json();
+
+    renderProducts();
+
+  } catch (error) {
+
+    document.getElementById("products").innerHTML =
+      "<p>Unable to load products.</p>";
+
+  }
+}
+
+
+function renderProducts() {
+
+  const container =
+    document.getElementById("products");
+
+  if (!products.length) {
+
+    container.innerHTML =
+      "<p>No products found.</p>";
+
+    return;
+  }
+
+  container.innerHTML = "";
+
+  products.forEach(function(product) {
+
+    const item =
+      document.createElement("div");
+
+    item.className = "product";
+
+    item.innerHTML = `
+
+      <div class="product-info">
+
+        <h3>${escapeHTML(product.name)}</h3>
+
+        <p>
+          ₱${Number(product.price).toLocaleString()}
+        </p>
+
+        <p>
+          ⭐ ${product.rating || 0}
+          (${product.rating_count || 0} ratings)
+          · Stock: ${product.stock || 0}
+        </p>
+
+      </div>
+
+      <div class="product-actions">
+
+        <button
+          class="edit"
+          onclick="editProduct(${product.id})"
+        >
+          EDIT
+        </button>
+
+        <button
+          class="delete"
+          onclick="deleteProduct(${product.id})"
+        >
+          DELETE
+        </button>
+
+      </div>
+    `;
+
+    container.appendChild(item);
+
+  });
+}
+
+
+function escapeHTML(value) {
+
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+function editProduct(id) {
+
+  const product =
+    products.find(function(item) {
+      return Number(item.id) === Number(id);
+    });
+
+  if (!product) return;
+
+  document.getElementById("productId").value =
+    product.id;
+
+  document.getElementById("name").value =
+    product.name || "";
+
+  document.getElementById("price").value =
+    product.price || "";
+
+  document.getElementById("rating").value =
+    product.rating || "";
+
+  document.getElementById("ratingCount").value =
+    product.rating_count || "";
+
+  document.getElementById("stock").value =
+    product.stock || "";
+
+  document.getElementById("imageUrl").value =
+    product.image_url || "";
+
+  document.getElementById("description").value =
+    product.description || "";
+
+  document.getElementById("formTitle").textContent =
+    "Edit Product";
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
+
+async function saveProduct() {
+
+  const id =
+    document.getElementById("productId").value;
+
+  const data = {
+
+    name:
+      document.getElementById("name").value.trim(),
+
+    price:
+      Number(document.getElementById("price").value),
+
+    description:
+      document.getElementById("description").value.trim(),
+
+    image_url:
+      document.getElementById("imageUrl").value.trim(),
+
+    rating:
+      Number(document.getElementById("rating").value || 0),
+
+    rating_count:
+      Number(document.getElementById("ratingCount").value || 0),
+
+    stock:
+      Number(document.getElementById("stock").value || 0)
+
+  };
+
+
+  if (!data.name || Number.isNaN(data.price)) {
+
+    alert("Product name and price are required.");
+
+    return;
+  }
+
+
+  try {
+
+    const response =
+      await fetch(API_URL, {
+
+        method: id ? "PUT" : "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify(
+          id
+            ? { id: Number(id), ...data }
+            : data
+        )
+
+      });
+
+
+    const result =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        result.error || "Save failed"
+      );
+
+    }
+
+
+    showStatus(
+      id
+        ? "Product updated successfully."
+        : "Product added successfully."
+    );
+
+
+    clearForm();
+
+    await loadProducts();
+
+
+  } catch (error) {
+
+    alert(error.message);
+
+  }
+}
+
+
+async function deleteProduct(id) {
+
+  const product =
+    products.find(function(item) {
+      return Number(item.id) === Number(id);
+    });
+
+
+  if (!product) return;
+
+
+  const confirmed =
+    confirm(
+      "Delete " +
+      product.name +
+      "?"
+    );
+
+
+  if (!confirmed) return;
+
+
+  try {
+
+    const response =
+      await fetch(
+        API_URL + "?id=" + encodeURIComponent(id),
+        {
+          method: "DELETE"
+        }
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        result.error || "Delete failed"
+      );
+
+    }
+
+
+    showStatus(
+      "Product deleted successfully."
+    );
+
+
+    await loadProducts();
+
+
+  } catch (error) {
+
+    alert(error.message);
+
+  }
+}
+
+
+function logout() {
+
+  alert(
+    "Authentication will be handled by the secure admin system."
+  );
+
+}
+
+
+/* Load products */
+
+loadProducts();
+
+</script>
+
+</body>
+</html>
