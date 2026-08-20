@@ -145,6 +145,20 @@ button {
   color: #aaa;
 }
 
+.product img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid #333;
+}
+
+.product-info {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
 .actions {
   display: flex;
   gap: 8px;
@@ -157,6 +171,44 @@ button {
 
 #dashboard {
   display: none;
+}
+
+.photo-box {
+  background: #080808;
+  border: 1px dashed #444;
+  border-radius: 14px;
+  padding: 15px;
+  text-align: center;
+}
+
+.photo-preview {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid #333;
+  display: none;
+  margin: 15px auto;
+}
+
+.photo-button {
+  display: inline-block;
+  background: #087ff5;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.photo-button input {
+  display: none;
+}
+
+.photo-name {
+  color: #888;
+  font-size: 14px;
+  margin-top: 10px;
 }
 
 @media (max-width: 700px) {
@@ -176,6 +228,10 @@ button {
   .product {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .product-info {
+    width: 100%;
   }
 
   .actions {
@@ -211,10 +267,7 @@ button {
 
 <main>
 
-<section
-  id="login"
-  class="panel login"
->
+<section id="login" class="panel login">
 
   <h1>Admin Login</h1>
 
@@ -244,10 +297,7 @@ button {
     LOG IN
   </button>
 
-  <p
-    id="loginMessage"
-    class="message"
-  ></p>
+  <p id="loginMessage" class="message"></p>
 
 </section>
 
@@ -356,17 +406,43 @@ button {
       </div>
 
 
+      <!-- ADD PHOTO -->
+
       <div class="field">
 
         <label>
-          Image URL
+          Product Photo
         </label>
 
-        <input
-          id="imageUrl"
-          type="url"
-          placeholder="https://..."
-        >
+        <div class="photo-box">
+
+          <label class="photo-button">
+
+            📷 ADD PHOTO
+
+            <input
+              id="photoInput"
+              type="file"
+              accept="image/*"
+              onchange="handlePhoto(event)"
+            >
+
+          </label>
+
+          <img
+            id="photoPreview"
+            class="photo-preview"
+            alt="Product preview"
+          >
+
+          <div
+            id="photoName"
+            class="photo-name"
+          >
+            No photo selected
+          </div>
+
+        </div>
 
       </div>
 
@@ -434,7 +510,12 @@ const API_URL = "/api/products";
 const AUTH_URL = "/api/admin";
 
 let products = [];
+let selectedImageData = "";
 
+
+/* =========================
+   SESSION
+========================= */
 
 async function checkSession() {
 
@@ -496,6 +577,10 @@ function showDashboard() {
 
 }
 
+
+/* =========================
+   LOGIN
+========================= */
 
 async function login() {
 
@@ -587,6 +672,155 @@ async function logout() {
 }
 
 
+/* =========================
+   PHOTO UPLOAD
+========================= */
+
+function handlePhoto(event) {
+
+  const file =
+    event.target.files[0];
+
+  if (!file) {
+    return;
+  }
+
+  if (!file.type.startsWith("image/")) {
+
+    alert("Please select an image.");
+
+    event.target.value = "";
+
+    return;
+  }
+
+  const maxSize =
+    10 * 1024 * 1024;
+
+  if (file.size > maxSize) {
+
+    alert(
+      "Image is too large. Please choose an image under 10MB."
+    );
+
+    event.target.value = "";
+
+    return;
+  }
+
+
+  const reader =
+    new FileReader();
+
+
+  reader.onload = function(e) {
+
+    const image =
+      new Image();
+
+
+    image.onload = function() {
+
+      const maxWidth = 1000;
+      const maxHeight = 1000;
+
+      let width =
+        image.width;
+
+      let height =
+        image.height;
+
+
+      if (width > maxWidth) {
+
+        height =
+          height *
+          (maxWidth / width);
+
+        width =
+          maxWidth;
+
+      }
+
+
+      if (height > maxHeight) {
+
+        width =
+          width *
+          (maxHeight / height);
+
+        height =
+          maxHeight;
+
+      }
+
+
+      const canvas =
+        document.createElement("canvas");
+
+      canvas.width =
+        Math.round(width);
+
+      canvas.height =
+        Math.round(height);
+
+
+      const ctx =
+        canvas.getContext("2d");
+
+
+      ctx.drawImage(
+        image,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+
+
+      selectedImageData =
+        canvas.toDataURL(
+          "image/jpeg",
+          0.75
+        );
+
+
+      const preview =
+        document.getElementById(
+          "photoPreview"
+        );
+
+
+      preview.src =
+        selectedImageData;
+
+      preview.style.display =
+        "block";
+
+
+      document.getElementById(
+        "photoName"
+      ).textContent =
+        file.name;
+
+    };
+
+
+    image.src =
+      e.target.result;
+
+  };
+
+
+  reader.readAsDataURL(file);
+
+}
+
+
+/* =========================
+   PRODUCTS
+========================= */
+
 async function loadProducts() {
 
   try {
@@ -663,23 +897,35 @@ function renderProducts() {
       "product";
 
 
+    const image =
+      product.image_url
+        ? `<img src="${escapeHTML(product.image_url)}" alt="">`
+        : "";
+
+
     item.innerHTML = `
 
-      <div>
+      <div class="product-info">
 
-        <h3>
-          ${escapeHTML(product.name)}
-        </h3>
+        ${image}
 
-        <p>
-          ₱${Number(product.price).toLocaleString()}
-        </p>
+        <div>
 
-        <p>
-          ⭐ ${product.rating || 0}
-          (${product.rating_count || 0})
-          · Stock: ${product.stock || 0}
-        </p>
+          <h3>
+            ${escapeHTML(product.name)}
+          </h3>
+
+          <p>
+            ₱${Number(product.price).toLocaleString()}
+          </p>
+
+          <p>
+            ⭐ ${product.rating || 0}
+            (${product.rating_count || 0})
+            · Stock: ${product.stock || 0}
+          </p>
+
+        </div>
 
       </div>
 
@@ -711,6 +957,10 @@ function renderProducts() {
 }
 
 
+/* =========================
+   EDIT
+========================= */
+
 function editProduct(id) {
 
   const product =
@@ -741,14 +991,54 @@ function editProduct(id) {
   document.getElementById("stock").value =
     product.stock || "";
 
-  document.getElementById("imageUrl").value =
-    product.image_url || "";
-
   document.getElementById("description").value =
     product.description || "";
 
+
+  selectedImageData =
+    product.image_url || "";
+
+
+  const preview =
+    document.getElementById(
+      "photoPreview"
+    );
+
+
+  const photoName =
+    document.getElementById(
+      "photoName"
+    );
+
+
+  if (product.image_url) {
+
+    preview.src =
+      product.image_url;
+
+    preview.style.display =
+      "block";
+
+    photoName.textContent =
+      "Current product photo";
+
+  } else {
+
+    preview.src =
+      "";
+
+    preview.style.display =
+      "none";
+
+    photoName.textContent =
+      "No photo selected";
+
+  }
+
+
   document.getElementById("formTitle").textContent =
     "Edit Product";
+
 
   window.scrollTo({
     top: 0,
@@ -757,6 +1047,10 @@ function editProduct(id) {
 
 }
 
+
+/* =========================
+   CLEAR
+========================= */
 
 function clearForm() {
 
@@ -778,17 +1072,42 @@ function clearForm() {
   document.getElementById("stock").value =
     "";
 
-  document.getElementById("imageUrl").value =
-    "";
-
   document.getElementById("description").value =
     "";
+
+
+  document.getElementById("photoInput").value =
+    "";
+
+
+  selectedImageData =
+    "";
+
+
+  document.getElementById(
+    "photoPreview"
+  ).src = "";
+
+  document.getElementById(
+    "photoPreview"
+  ).style.display = "none";
+
+
+  document.getElementById(
+    "photoName"
+  ).textContent =
+    "No photo selected";
+
 
   document.getElementById("formTitle").textContent =
     "Add Product";
 
 }
 
+
+/* =========================
+   SAVE
+========================= */
 
 async function saveProduct() {
 
@@ -810,7 +1129,7 @@ async function saveProduct() {
       document.getElementById("description").value.trim(),
 
     image_url:
-      document.getElementById("imageUrl").value.trim(),
+      selectedImageData,
 
     rating:
       Number(
@@ -916,6 +1235,10 @@ async function saveProduct() {
 }
 
 
+/* =========================
+   DELETE
+========================= */
+
 async function deleteProduct(id) {
 
   const product =
@@ -1002,5 +1325,5 @@ checkSession();
 </script>
 
 </body>
-</html>
-
+  </html>
+  
