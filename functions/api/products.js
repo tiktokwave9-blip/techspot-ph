@@ -1,4 +1,4 @@
-import { verifySession } from "../../_auth.js";
+import { verifySession } from "../_auth.js";
 
 function unauthorized() {
   return new Response(
