@@ -1,3 +1,28 @@
+function unauthorized() {
+  return new Response(
+    JSON.stringify({ error: "Unauthorized" }),
+    {
+      status: 401,
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        "X-Content-Type-Options": "nosniff",
+        "Cache-Control": "no-store"
+      }
+    }
+  );
+}
+
+function isAuthorized(context) {
+  const key = context.request.headers.get("X-Admin-Key");
+
+  return Boolean(
+    context.env.ADMIN_KEY &&
+    key &&
+    key === context.env.ADMIN_KEY
+  );
+}
+
+
 export async function onRequestGet(context) {
   try {
     const { results } = await context.env.TECHSPOT_DB
@@ -28,13 +53,10 @@ export async function onRequestGet(context) {
     });
 
   } catch (error) {
-    // Do not expose database/error details publicly.
     console.error("Products API error:", error);
 
     return new Response(
-      JSON.stringify({
-        error: "Unable to load products"
-      }),
+      JSON.stringify({ error: "Unable to load products" }),
       {
         status: 500,
         headers: {
@@ -43,6 +65,203 @@ export async function onRequestGet(context) {
           "Cache-Control": "no-store"
         }
       }
+    );
+  }
+}
+
+
+export async function onRequestPost(context) {
+  if (!isAuthorized(context)) {
+    return unauthorized();
+  }
+
+  try {
+    const body = await context.request.json();
+
+    const {
+      name,
+      price,
+      description = "",
+      image_url = "",
+      rating = 0,
+      rating_count = 0,
+      stock = 0
+    } = body;
+
+    if (!name || price === undefined) {
+      return new Response(
+        JSON.stringify({
+          error: "Product name and price are required"
+        }),
+        {
+          status: 400,
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+      );
+    }
+
+    const result = await context.env.TECHSPOT_DB
+      .prepare(`
+        INSERT INTO products
+        (
+          name,
+          price,
+          description,
+          image_url,
+          rating,
+          rating_count,
+          stock,
+          created_at,
+          updated_at
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+      `)
+      .bind(
+        name,
+        price,
+        description,
+        image_url,
+        rating,
+        rating_count,
+        stock
+      )
+      .run();
+
+    return Response.json({
+      success: true,
+      id: result.meta?.last_row_id
+    });
+
+  } catch (error) {
+    console.error("Add product error:", error);
+
+    return Response.json(
+      { error: "Unable to add product" },
+      { status: 500 }
+    );
+  }
+}
+
+
+export async function onRequestPut(context) {
+  if (!isAuthorized(context)) {
+    return unauthorized();
+  }
+
+  try {
+    const body = await context.request.json();
+
+    const {
+      id,
+      name,
+      price,
+      description = "",
+      image_url = "",
+      rating = 0,
+      rating_count = 0,
+      stock = 0
+    } = body;
+
+    if (!id || !name || price === undefined) {
+      return Response.json(
+        {
+          error: "Product ID, name and price are required"
+        },
+        { status: 400 }
+      );
+    }
+
+    const result = await context.env.TECHSPOT_DB
+      .prepare(`
+        UPDATE products
+        SET
+          name = ?,
+          price = ?,
+          description = ?,
+          image_url = ?,
+          rating = ?,
+          rating_count = ?,
+          stock = ?,
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `)
+      .bind(
+        name,
+        price,
+        description,
+        image_url,
+        rating,
+        rating_count,
+        stock,
+        id
+      )
+      .run();
+
+    if (!result.meta?.changes) {
+      return Response.json(
+        { error: "Product not found" },
+        { status: 404 }
+      );
+    }
+
+    return Response.json({
+      success: true
+    });
+
+  } catch (error) {
+    console.error("Update product error:", error);
+
+    return Response.json(
+      { error: "Unable to update product" },
+      { status: 500 }
+    );
+  }
+}
+
+
+export async function onRequestDelete(context) {
+  if (!isAuthorized(context)) {
+    return unauthorized();
+  }
+
+  try {
+    const url = new URL(context.request.url);
+    const id = url.searchParams.get("id");
+
+    if (!id) {
+      return Response.json(
+        { error: "Product ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const result = await context.env.TECHSPOT_DB
+      .prepare(`
+        DELETE FROM products
+        WHERE id = ?
+      `)
+      .bind(id)
+      .run();
+
+    if (!result.meta?.changes) {
+      return Response.json(
+        { error: "Product not found" },
+        { status: 404 }
+      );
+    }
+
+    return Response.json({
+      success: true
+    });
+
+  } catch (error) {
+    console.error("Delete product error:", error);
+
+    return Response.json(
+      { error: "Unable to delete product" },
+      { status: 500 }
     );
   }
 }
