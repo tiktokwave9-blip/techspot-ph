@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>TechSpot PH — Admin</title>
 
 <style>
@@ -13,7 +15,7 @@
 body {
   margin: 0;
   background: #050505;
-  color: #fff;
+  color: white;
   font-family: Arial, sans-serif;
 }
 
@@ -34,28 +36,10 @@ header {
   color: #1683ff;
 }
 
-.logout {
-  background: #222;
-  color: white;
-  border: 1px solid #444;
-  padding: 10px 16px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
 main {
   padding: 40px 6%;
   max-width: 1200px;
   margin: auto;
-}
-
-h1 {
-  margin-bottom: 8px;
-}
-
-.subtitle {
-  color: #999;
-  margin-bottom: 30px;
 }
 
 .panel {
@@ -66,29 +50,14 @@ h1 {
   margin-bottom: 25px;
 }
 
-.panel h2 {
+.login {
+  max-width: 420px;
+  margin: 100px auto;
+}
+
+h1,
+h2 {
   margin-top: 0;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-
-.field.full {
-  grid-column: 1 / -1;
-}
-
-label {
-  color: #aaa;
-  font-size: 14px;
 }
 
 input,
@@ -108,15 +77,14 @@ textarea {
   resize: vertical;
 }
 
-input:focus,
-textarea:focus {
-  border-color: #1683ff;
+label {
+  display: block;
+  color: #aaa;
+  margin-bottom: 7px;
 }
 
-.actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
+.field {
+  margin-bottom: 15px;
 }
 
 button {
@@ -137,6 +105,21 @@ button {
   color: white;
 }
 
+.danger {
+  background: #8b1e1e;
+  color: white;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
 .products {
   display: grid;
   gap: 12px;
@@ -153,55 +136,40 @@ button {
   align-items: center;
 }
 
-.product-info h3 {
-  margin: 0 0 7px;
+.product h3 {
+  margin: 0 0 8px;
 }
 
-.product-info p {
-  margin: 4px 0;
+.product p {
+  margin: 5px 0;
   color: #aaa;
 }
 
-.product-actions {
+.actions {
   display: flex;
   gap: 8px;
-  flex-shrink: 0;
 }
 
-.edit {
-  background: #1683ff;
-  color: white;
-}
-
-.delete {
-  background: #8b1e1e;
-  color: white;
-}
-
-.status {
-  padding: 12px;
-  border-radius: 10px;
-  background: #101010;
+.message {
   color: #aaa;
-  margin-bottom: 20px;
+  margin-top: 12px;
+}
+
+#dashboard {
   display: none;
 }
 
 @media (max-width: 700px) {
 
-  header {
-    padding: 18px 5%;
-  }
-
   main {
-    padding: 30px 5%;
+    padding: 25px 5%;
   }
 
   .form-grid {
     grid-template-columns: 1fr;
   }
 
-  .field.full {
+  .full {
     grid-column: auto;
   }
 
@@ -210,15 +178,16 @@ button {
     align-items: flex-start;
   }
 
-  .product-actions {
+  .actions {
     width: 100%;
   }
 
-  .product-actions button {
+  .actions button {
     flex: 1;
   }
 }
 </style>
+
 </head>
 
 <body>
@@ -230,7 +199,9 @@ button {
   </div>
 
   <button
-    class="logout"
+    id="logoutButton"
+    class="secondary"
+    style="display:none"
     onclick="logout()"
   >
     LOG OUT
@@ -238,163 +209,219 @@ button {
 
 </header>
 
-
 <main>
 
-<h1>Admin Dashboard</h1>
+<section
+  id="login"
+  class="panel login"
+>
 
-<div class="subtitle">
-  Manage your TechSpot PH products.
-</div>
+  <h1>Admin Login</h1>
 
+  <p class="message">
+    Enter your admin password.
+  </p>
 
-<div
-  id="status"
-  class="status"
-></div>
+  <div class="field">
 
+    <label for="password">
+      Password
+    </label>
 
-<section class="panel">
+    <input
+      id="password"
+      type="password"
+      autocomplete="current-password"
+      placeholder="Admin password"
+    >
 
-  <h2 id="formTitle">
-    Add Product
-  </h2>
+  </div>
 
-  <input
-    type="hidden"
-    id="productId"
+  <button
+    class="primary"
+    onclick="login()"
   >
+    LOG IN
+  </button>
 
-  <div class="form-grid">
-
-    <div class="field">
-
-      <label>Product Name</label>
-
-      <input
-        id="name"
-        type="text"
-        placeholder="iPhone 13"
-      >
-
-    </div>
-
-
-    <div class="field">
-
-      <label>Price</label>
-
-      <input
-        id="price"
-        type="number"
-        placeholder="25000"
-      >
-
-    </div>
-
-
-    <div class="field">
-
-      <label>Rating</label>
-
-      <input
-        id="rating"
-        type="number"
-        min="0"
-        max="5"
-        step="0.1"
-        placeholder="5"
-      >
-
-    </div>
-
-
-    <div class="field">
-
-      <label>Rating Count</label>
-
-      <input
-        id="ratingCount"
-        type="number"
-        min="0"
-        placeholder="200"
-      >
-
-    </div>
-
-
-    <div class="field">
-
-      <label>Stock</label>
-
-      <input
-        id="stock"
-        type="number"
-        min="0"
-        placeholder="10"
-      >
-
-    </div>
-
-
-    <div class="field">
-
-      <label>Image URL</label>
-
-      <input
-        id="imageUrl"
-        type="url"
-        placeholder="https://..."
-      >
-
-    </div>
-
-
-    <div class="field full">
-
-      <label>Description</label>
-
-      <textarea
-        id="description"
-        placeholder="Product description..."
-      ></textarea>
-
-    </div>
-
-  </div>
-
-
-  <div class="actions">
-
-    <button
-      class="primary"
-      onclick="saveProduct()"
-    >
-      SAVE PRODUCT
-    </button>
-
-    <button
-      class="secondary"
-      onclick="clearForm()"
-    >
-      CLEAR
-    </button>
-
-  </div>
+  <p
+    id="loginMessage"
+    class="message"
+  ></p>
 
 </section>
 
 
-<section class="panel">
+<section id="dashboard">
 
-  <h2>Products</h2>
+  <h1>Admin Dashboard</h1>
 
-  <div
-    id="products"
-    class="products"
-  >
-    Loading...
-  </div>
+  <p class="message">
+    Manage TechSpot PH products.
+  </p>
+
+
+  <section class="panel">
+
+    <h2 id="formTitle">
+      Add Product
+    </h2>
+
+    <input
+      id="productId"
+      type="hidden"
+    >
+
+    <div class="form-grid">
+
+      <div class="field">
+
+        <label>
+          Product Name
+        </label>
+
+        <input
+          id="name"
+          type="text"
+          placeholder="iPhone 13"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Price
+        </label>
+
+        <input
+          id="price"
+          type="number"
+          min="0"
+          step="0.01"
+          placeholder="25000"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Rating
+        </label>
+
+        <input
+          id="rating"
+          type="number"
+          min="0"
+          max="5"
+          step="0.1"
+          placeholder="5"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Rating Count
+        </label>
+
+        <input
+          id="ratingCount"
+          type="number"
+          min="0"
+          placeholder="100"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Stock
+        </label>
+
+        <input
+          id="stock"
+          type="number"
+          min="0"
+          placeholder="10"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Image URL
+        </label>
+
+        <input
+          id="imageUrl"
+          type="url"
+          placeholder="https://..."
+        >
+
+      </div>
+
+
+      <div class="field full">
+
+        <label>
+          Description
+        </label>
+
+        <textarea
+          id="description"
+          placeholder="Product description..."
+        ></textarea>
+
+      </div>
+
+    </div>
+
+
+    <div class="actions">
+
+      <button
+        class="primary"
+        onclick="saveProduct()"
+      >
+        SAVE PRODUCT
+      </button>
+
+      <button
+        class="secondary"
+        onclick="clearForm()"
+      >
+        CLEAR
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <section class="panel">
+
+    <h2>
+      Products
+    </h2>
+
+    <div
+      id="products"
+      class="products"
+    >
+      Loading...
+    </div>
+
+  </section>
 
 </section>
 
@@ -404,37 +431,159 @@ button {
 <script>
 
 const API_URL = "/api/products";
+const AUTH_URL = "/api/admin";
 
 let products = [];
 
 
-function showStatus(message) {
+async function checkSession() {
 
-  const status =
-    document.getElementById("status");
+  try {
 
-  status.textContent = message;
-  status.style.display = "block";
+    const response =
+      await fetch(
+        AUTH_URL,
+        {
+          credentials: "same-origin",
+          cache: "no-store"
+        }
+      );
 
-  setTimeout(function() {
-    status.style.display = "none";
-  }, 3000);
+    const data =
+      await response.json();
+
+    if (data.authenticated) {
+      showDashboard();
+    } else {
+      showLogin();
+    }
+
+  } catch {
+
+    showLogin();
+
+  }
+
 }
 
 
-function clearForm() {
+function showLogin() {
 
-  document.getElementById("productId").value = "";
-  document.getElementById("name").value = "";
-  document.getElementById("price").value = "";
-  document.getElementById("rating").value = "";
-  document.getElementById("ratingCount").value = "";
-  document.getElementById("stock").value = "";
-  document.getElementById("imageUrl").value = "";
-  document.getElementById("description").value = "";
+  document.getElementById("login").style.display =
+    "block";
 
-  document.getElementById("formTitle").textContent =
-    "Add Product";
+  document.getElementById("dashboard").style.display =
+    "none";
+
+  document.getElementById("logoutButton").style.display =
+    "none";
+
+}
+
+
+function showDashboard() {
+
+  document.getElementById("login").style.display =
+    "none";
+
+  document.getElementById("dashboard").style.display =
+    "block";
+
+  document.getElementById("logoutButton").style.display =
+    "block";
+
+  loadProducts();
+
+}
+
+
+async function login() {
+
+  const password =
+    document.getElementById("password").value;
+
+  const message =
+    document.getElementById("loginMessage");
+
+
+  if (!password) {
+
+    message.textContent =
+      "Enter your password.";
+
+    return;
+
+  }
+
+
+  message.textContent =
+    "Logging in...";
+
+
+  try {
+
+    const response =
+      await fetch(
+        AUTH_URL,
+        {
+          method: "POST",
+          credentials: "same-origin",
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+          body: JSON.stringify({
+            password
+          })
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      message.textContent =
+        data.error || "Login failed.";
+
+      return;
+
+    }
+
+
+    document.getElementById("password").value =
+      "";
+
+    message.textContent =
+      "";
+
+    showDashboard();
+
+
+  } catch {
+
+    message.textContent =
+      "Unable to connect to the server.";
+
+  }
+
+}
+
+
+async function logout() {
+
+  await fetch(
+    AUTH_URL,
+    {
+      method: "DELETE",
+      credentials: "same-origin"
+    }
+  );
+
+  showLogin();
+
 }
 
 
@@ -443,89 +592,34 @@ async function loadProducts() {
   try {
 
     const response =
-      await fetch(API_URL, {
-        cache: "no-store"
-      });
+      await fetch(
+        API_URL,
+        {
+          credentials: "same-origin",
+          cache: "no-store"
+        }
+      );
+
 
     if (!response.ok) {
-      throw new Error("Failed to load products");
+      throw new Error();
     }
 
-    products = await response.json();
+
+    products =
+      await response.json();
+
 
     renderProducts();
 
-  } catch (error) {
+
+  } catch {
 
     document.getElementById("products").innerHTML =
       "<p>Unable to load products.</p>";
 
   }
-}
 
-
-function renderProducts() {
-
-  const container =
-    document.getElementById("products");
-
-  if (!products.length) {
-
-    container.innerHTML =
-      "<p>No products found.</p>";
-
-    return;
-  }
-
-  container.innerHTML = "";
-
-  products.forEach(function(product) {
-
-    const item =
-      document.createElement("div");
-
-    item.className = "product";
-
-    item.innerHTML = `
-
-      <div class="product-info">
-
-        <h3>${escapeHTML(product.name)}</h3>
-
-        <p>
-          ₱${Number(product.price).toLocaleString()}
-        </p>
-
-        <p>
-          ⭐ ${product.rating || 0}
-          (${product.rating_count || 0} ratings)
-          · Stock: ${product.stock || 0}
-        </p>
-
-      </div>
-
-      <div class="product-actions">
-
-        <button
-          class="edit"
-          onclick="editProduct(${product.id})"
-        >
-          EDIT
-        </button>
-
-        <button
-          class="delete"
-          onclick="deleteProduct(${product.id})"
-        >
-          DELETE
-        </button>
-
-      </div>
-    `;
-
-    container.appendChild(item);
-
-  });
 }
 
 
@@ -541,14 +635,93 @@ function escapeHTML(value) {
 }
 
 
+function renderProducts() {
+
+  const container =
+    document.getElementById("products");
+
+
+  if (!products.length) {
+
+    container.innerHTML =
+      "<p>No products found.</p>";
+
+    return;
+
+  }
+
+
+  container.innerHTML = "";
+
+
+  products.forEach(product => {
+
+    const item =
+      document.createElement("div");
+
+    item.className =
+      "product";
+
+
+    item.innerHTML = `
+
+      <div>
+
+        <h3>
+          ${escapeHTML(product.name)}
+        </h3>
+
+        <p>
+          ₱${Number(product.price).toLocaleString()}
+        </p>
+
+        <p>
+          ⭐ ${product.rating || 0}
+          (${product.rating_count || 0})
+          · Stock: ${product.stock || 0}
+        </p>
+
+      </div>
+
+      <div class="actions">
+
+        <button
+          class="primary"
+          onclick="editProduct(${product.id})"
+        >
+          EDIT
+        </button>
+
+        <button
+          class="danger"
+          onclick="deleteProduct(${product.id})"
+        >
+          DELETE
+        </button>
+
+      </div>
+
+    `;
+
+
+    container.appendChild(item);
+
+  });
+
+}
+
+
 function editProduct(id) {
 
   const product =
-    products.find(function(item) {
-      return Number(item.id) === Number(id);
-    });
+    products.find(
+      item =>
+        Number(item.id) === Number(id)
+    );
+
 
   if (!product) return;
+
 
   document.getElementById("productId").value =
     product.id;
@@ -581,6 +754,39 @@ function editProduct(id) {
     top: 0,
     behavior: "smooth"
   });
+
+}
+
+
+function clearForm() {
+
+  document.getElementById("productId").value =
+    "";
+
+  document.getElementById("name").value =
+    "";
+
+  document.getElementById("price").value =
+    "";
+
+  document.getElementById("rating").value =
+    "";
+
+  document.getElementById("ratingCount").value =
+    "";
+
+  document.getElementById("stock").value =
+    "";
+
+  document.getElementById("imageUrl").value =
+    "";
+
+  document.getElementById("description").value =
+    "";
+
+  document.getElementById("formTitle").textContent =
+    "Add Product";
+
 }
 
 
@@ -589,13 +795,16 @@ async function saveProduct() {
   const id =
     document.getElementById("productId").value;
 
+
   const data = {
 
     name:
       document.getElementById("name").value.trim(),
 
     price:
-      Number(document.getElementById("price").value),
+      Number(
+        document.getElementById("price").value
+      ),
 
     description:
       document.getElementById("description").value.trim(),
@@ -604,107 +813,57 @@ async function saveProduct() {
       document.getElementById("imageUrl").value.trim(),
 
     rating:
-      Number(document.getElementById("rating").value || 0),
+      Number(
+        document.getElementById("rating").value || 0
+      ),
 
     rating_count:
-      Number(document.getElementById("ratingCount").value || 0),
+      Number(
+        document.getElementById("ratingCount").value || 0
+      ),
 
     stock:
-      Number(document.getElementById("stock").value || 0)
+      Number(
+        document.getElementById("stock").value || 0
+      )
 
   };
 
 
-  if (!data.name || Number.isNaN(data.price)) {
+  if (
+    !data.name ||
+    !Number.isFinite(data.price)
+  ) {
 
-    alert("Product name and price are required.");
+    alert(
+      "Product name and price are required."
+    );
 
     return;
-  }
-
-
-  try {
-
-    const response =
-      await fetch(API_URL, {
-
-        method: id ? "PUT" : "POST",
-
-        headers: {
-          "Content-Type": "application/json"
-        },
-
-        body: JSON.stringify(
-          id
-            ? { id: Number(id), ...data }
-            : data
-        )
-
-      });
-
-
-    const result =
-      await response.json();
-
-
-    if (!response.ok) {
-
-      throw new Error(
-        result.error || "Save failed"
-      );
-
-    }
-
-
-    showStatus(
-      id
-        ? "Product updated successfully."
-        : "Product added successfully."
-    );
-
-
-    clearForm();
-
-    await loadProducts();
-
-
-  } catch (error) {
-
-    alert(error.message);
 
   }
-}
-
-
-async function deleteProduct(id) {
-
-  const product =
-    products.find(function(item) {
-      return Number(item.id) === Number(id);
-    });
-
-
-  if (!product) return;
-
-
-  const confirmed =
-    confirm(
-      "Delete " +
-      product.name +
-      "?"
-    );
-
-
-  if (!confirmed) return;
 
 
   try {
 
     const response =
       await fetch(
-        API_URL + "?id=" + encodeURIComponent(id),
+        API_URL,
         {
-          method: "DELETE"
+          method: id ? "PUT" : "POST",
+          credentials: "same-origin",
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+          body: JSON.stringify(
+            id
+              ? {
+                  id: Number(id),
+                  ...data
+                }
+              : data
+          )
         }
       );
 
@@ -713,21 +872,39 @@ async function deleteProduct(id) {
       await response.json();
 
 
+    if (response.status === 401) {
+
+      alert(
+        "Your admin session expired. Please log in again."
+      );
+
+      showLogin();
+
+      return;
+
+    }
+
+
     if (!response.ok) {
 
       throw new Error(
-        result.error || "Delete failed"
+        result.error ||
+        "Unable to save product."
       );
 
     }
 
 
-    showStatus(
-      "Product deleted successfully."
+    alert(
+      id
+        ? "Product updated."
+        : "Product added."
     );
 
 
-    await loadProducts();
+    clearForm();
+
+    loadProducts();
 
 
   } catch (error) {
@@ -735,21 +912,92 @@ async function deleteProduct(id) {
     alert(error.message);
 
   }
-}
-
-
-function logout() {
-
-  alert(
-    "Authentication will be handled by the secure admin system."
-  );
 
 }
 
 
-/* Load products */
+async function deleteProduct(id) {
 
-loadProducts();
+  const product =
+    products.find(
+      item =>
+        Number(item.id) === Number(id)
+    );
+
+
+  if (!product) return;
+
+
+  if (
+    !confirm(
+      `Delete "${product.name}"?`
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  try {
+
+    const response =
+      await fetch(
+        API_URL +
+        "?id=" +
+        encodeURIComponent(id),
+        {
+          method: "DELETE",
+          credentials: "same-origin"
+        }
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if (response.status === 401) {
+
+      alert(
+        "Your admin session expired. Please log in again."
+      );
+
+      showLogin();
+
+      return;
+
+    }
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        result.error ||
+        "Unable to delete product."
+      );
+
+    }
+
+
+    alert(
+      "Product deleted."
+    );
+
+
+    loadProducts();
+
+
+  } catch (error) {
+
+    alert(error.message);
+
+  }
+
+}
+
+
+checkSession();
 
 </script>
 
