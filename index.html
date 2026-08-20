@@ -11,6 +11,10 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   background: #050505;
@@ -19,15 +23,20 @@ body {
 }
 
 header {
-  padding: 20px 7%;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 16px 6%;
+  background: rgba(5,5,5,.95);
   border-bottom: 1px solid #222;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 15px;
 }
 
 .logo {
-  font-size: 30px;
+  font-size: 26px;
   font-weight: 800;
 }
 
@@ -35,75 +44,112 @@ header {
   color: #1683ff;
 }
 
-.message-btn,
-.modal-message {
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.message-btn {
   display: inline-block;
   background: #087ff5;
-  color: white;
-  padding: 13px 20px;
-  border-radius: 12px;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 11px;
   text-decoration: none;
   font-weight: 700;
   border: 0;
-  cursor: pointer;
+}
+
+.message-btn:active {
+  transform: scale(.97);
 }
 
 .hero {
-  padding: 90px 7% 100px;
-  min-height: 560px;
-  background: radial-gradient(
-    circle at 70% 50%,
-    #064aa8 0,
-    #050505 48%
-  );
+  padding: 90px 6%;
+  min-height: 540px;
+  display: flex;
+  align-items: center;
+  background:
+    radial-gradient(
+      circle at 75% 45%,
+      #064aa8 0,
+      #07152a 25%,
+      #050505 55%
+    );
+}
+
+.hero-content {
+  max-width: 900px;
 }
 
 .tag {
   color: #1683ff;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
 }
 
 .hero h1 {
-  font-size: clamp(42px, 8vw, 78px);
-  max-width: 850px;
+  font-size: clamp(40px, 8vw, 76px);
+  line-height: 1.03;
   margin: 18px 0;
-  line-height: 1.05;
 }
 
 .hero p {
-  font-size: 21px;
-  line-height: 1.5;
   max-width: 700px;
-  color: #ddd;
+  color: #ccc;
+  font-size: 19px;
+  line-height: 1.6;
 }
 
-section {
-  padding: 50px 7%;
+.hero-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 28px;
 }
 
-.products h2 {
+.secondary-btn {
+  display: inline-block;
+  background: #151515;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 11px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+section.products-section {
+  padding: 55px 6%;
+  max-width: 1400px;
+  margin: auto;
+}
+
+.products-section h2 {
   font-size: 38px;
-  margin-bottom: 10px;
+  margin: 0 0 8px;
 }
 
 .muted {
-  color: #aaa;
-  font-size: 18px;
+  color: #999;
+  line-height: 1.5;
 }
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(220px, 1fr)
+  );
+  gap: 18px;
   margin-top: 30px;
 }
 
 .product {
   background: #0d0d0d;
-  border: 1px solid #252525;
-  border-radius: 18px;
-  padding: 18px;
+  border: 1px solid #242424;
+  border-radius: 17px;
+  padding: 15px;
   cursor: pointer;
   transition: .2s;
 }
@@ -115,15 +161,15 @@ section {
 
 .product-image {
   width: 100%;
-  height: 190px;
+  height: 210px;
   border-radius: 12px;
   background: #151515;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #777;
-  margin-bottom: 18px;
   overflow: hidden;
+  color: #666;
+  margin-bottom: 15px;
 }
 
 .product-image img {
@@ -134,48 +180,49 @@ section {
 
 .product h3 {
   margin: 0 0 8px;
-  font-size: 21px;
+  font-size: 19px;
 }
 
 .price {
   color: #1683ff;
   font-size: 20px;
-  font-weight: 700;
-}
-
-.stock {
-  margin-top: 8px;
-  color: #aaa;
-  font-size: 14px;
+  font-weight: 800;
 }
 
 .rating {
-  margin-top: 8px;
+  margin-top: 7px;
   color: #ffc107;
+  font-size: 14px;
+}
+
+.stock {
+  margin-top: 7px;
+  color: #999;
+  font-size: 14px;
 }
 
 .loading,
 .error,
 .empty {
-  margin-top: 30px;
   padding: 25px;
-  border: 1px solid #252525;
-  border-radius: 18px;
+  margin-top: 25px;
   background: #0d0d0d;
-  color: #bbb;
+  border: 1px solid #252525;
+  border-radius: 15px;
+  color: #aaa;
 }
 
-/* MODALS */
+/* MODAL */
 
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, .78);
+  z-index: 9999;
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  z-index: 9999;
+  padding: 15px;
+  background: rgba(0,0,0,.82);
 }
 
 .modal.show {
@@ -183,34 +230,38 @@ section {
 }
 
 .modal-box {
-  width: min(500px, 100%);
-  max-height: 90vh;
+  width: min(520px, 100%);
+  max-height: 92vh;
   overflow-y: auto;
   background: #0d1117;
   border: 1px solid #303b4a;
   border-radius: 20px;
-  padding: 25px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, .6);
+  padding: 20px;
 }
 
 .close {
   float: right;
-  background: transparent;
+  width: 40px;
+  height: 40px;
   border: 0;
-  color: #fff;
-  font-size: 30px;
+  border-radius: 50%;
+  background: #222;
+  color: white;
+  font-size: 27px;
   cursor: pointer;
 }
 
 .detail-image {
-  height: 230px;
-  background: #151b22;
+  width: 100%;
+  height: 260px;
+  margin-top: 5px;
+  margin-bottom: 18px;
   border-radius: 15px;
+  background: #151b22;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #777;
-  margin-bottom: 20px;
+  color: #666;
   overflow: hidden;
   clear: both;
 }
@@ -223,144 +274,110 @@ section {
 
 .modal-box h2 {
   margin: 0 0 8px;
+  font-size: 25px;
 }
 
 .modal-price {
   color: #1683ff;
   font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 12px;
+  font-weight: 800;
 }
 
 .modal-description {
   color: #bbb;
-  line-height: 1.5;
-  margin-bottom: 15px;
+  line-height: 1.6;
+  margin: 15px 0;
 }
 
 .modal-stock {
   color: #aaa;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
-/* MESSAGE FORM */
-
-.message-form {
-  display: none;
-}
-
-.message-form.show {
+.modal-message {
   display: block;
-}
-
-.message-form label {
-  display: block;
-  color: #aaa;
-  margin: 15px 0 7px;
-}
-
-.message-form input,
-.message-form textarea {
   width: 100%;
-  background: #080808;
-  border: 1px solid #333;
-  color: white;
-  border-radius: 10px;
-  padding: 13px;
-  font-size: 16px;
-  outline: none;
-}
-
-.message-form textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-.send-button {
-  width: 100%;
-  margin-top: 15px;
+  padding: 15px;
+  border-radius: 12px;
   background: #087ff5;
-  color: white;
-  border: 0;
-  padding: 14px;
-  border-radius: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.cancel-button {
-  width: 100%;
-  margin-top: 8px;
-  background: #222;
-  color: white;
-  border: 0;
-  padding: 12px;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.message-status {
-  margin-top: 12px;
-  color: #aaa;
+  color: #fff;
   text-align: center;
+  text-decoration: none;
+  font-weight: 800;
 }
 
 footer {
-  padding: 35px 7%;
+  padding: 35px 6%;
   border-top: 1px solid #222;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
 }
+
+/* MOBILE */
 
 @media (max-width: 600px) {
 
   header {
-    padding: 18px 5%;
+    padding: 14px 5%;
   }
 
   .logo {
-    font-size: 23px;
+    font-size: 21px;
   }
 
   .message-btn {
-    padding: 10px 13px;
-    font-size: 13px;
+    padding: 10px 12px;
+    font-size: 12px;
   }
 
   .hero {
-    padding: 70px 5% 80px;
+    padding: 65px 5% 75px;
   }
 
-  section {
+  .hero h1 {
+    font-size: 43px;
+  }
+
+  .hero p {
+    font-size: 17px;
+  }
+
+  section.products-section {
     padding: 40px 5%;
   }
 
+  .products-section h2 {
+    font-size: 30px;
+  }
+
   .product-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
   }
 
   .product {
-    padding: 12px;
+    padding: 10px;
   }
 
   .product-image {
-    height: 140px;
+    height: 145px;
   }
 
   .product h3 {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .price {
     font-size: 17px;
   }
 
+  .detail-image {
+    height: 220px;
+  }
+
   footer {
-    padding: 25px 5%;
     flex-direction: column;
     text-align: center;
   }
@@ -376,24 +393,47 @@ footer {
     TECH<span class="blue">SPOT</span> PH
   </div>
 
-  <button
+  <a
     class="message-btn"
-    type="button"
-    onclick="openMessageBox()"
+    href="https://m.me/61593245291078"
+    target="_blank"
+    rel="noopener noreferrer"
   >
     💬 MESSAGE US
-  </button>
+  </a>
 
 </header>
+
 
 <main>
 
 <section class="hero">
 
-  <div class="tag">
-    WELCOME TO TECHSPOT PH
-  </div>
+  <div class="hero-content">
 
-  <h1>
-    YOUR ONE-STOP SHOP FOR ALL YOUR
-   
+    <div class="tag">
+      WELCOME TO TECHSPOT PH
+    </div>
+
+    <h1>
+      YOUR ONE-STOP SHOP FOR ALL YOUR
+      <span class="blue">TECH NEEDS.</span>
+    </h1>
+
+    <p>
+      iPhones, Android phones, laptops, computers and cameras.
+      Quality checked and customer-focused service.
+    </p>
+
+    <div class="hero-buttons">
+
+      <a
+        class="message-btn"
+        href="https://m.me/61593245291078"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        💬 MESSAGE US
+      </a>
+
+     
