@@ -145,15 +145,16 @@ button {
   color: #aaa;
 }
 
-.product img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 12px;
+.product-image {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  background: #080808;
+  border-radius: 10px;
   border: 1px solid #333;
 }
 
-.product-info {
+.product-left {
   display: flex;
   gap: 15px;
   align-items: center;
@@ -173,42 +174,15 @@ button {
   display: none;
 }
 
-.photo-box {
-  background: #080808;
-  border: 1px dashed #444;
-  border-radius: 14px;
-  padding: 15px;
-  text-align: center;
-}
-
-.photo-preview {
-  width: 180px;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 14px;
+#imagePreview {
+  display: none;
+  width: 100%;
+  max-height: 280px;
+  object-fit: contain;
+  margin-top: 12px;
+  border-radius: 12px;
   border: 1px solid #333;
-  display: none;
-  margin: 15px auto;
-}
-
-.photo-button {
-  display: inline-block;
-  background: #087ff5;
-  color: white;
-  padding: 12px 18px;
-  border-radius: 10px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.photo-button input {
-  display: none;
-}
-
-.photo-name {
-  color: #888;
-  font-size: 14px;
-  margin-top: 10px;
+  background: #080808;
 }
 
 @media (max-width: 700px) {
@@ -230,7 +204,7 @@ button {
     align-items: flex-start;
   }
 
-  .product-info {
+  .product-left {
     width: 100%;
   }
 
@@ -267,7 +241,10 @@ button {
 
 <main>
 
-<section id="login" class="panel login">
+<section
+  id="login"
+  class="panel login"
+>
 
   <h1>Admin Login</h1>
 
@@ -297,7 +274,10 @@ button {
     LOG IN
   </button>
 
-  <p id="loginMessage" class="message"></p>
+  <p
+    id="loginMessage"
+    class="message"
+  ></p>
 
 </section>
 
@@ -414,35 +394,27 @@ button {
           Product Photo
         </label>
 
-        <div class="photo-box">
+        <input
+          id="imageFile"
+          type="file"
+          accept="image/*"
+          style="display:none"
+          onchange="previewImage(event)"
+        >
 
-          <label class="photo-button">
+        <button
+          type="button"
+          class="secondary"
+          onclick="document.getElementById('imageFile').click()"
+          style="width:100%;"
+        >
+          📷 ADD PHOTO
+        </button>
 
-            📷 ADD PHOTO
-
-            <input
-              id="photoInput"
-              type="file"
-              accept="image/*"
-              onchange="handlePhoto(event)"
-            >
-
-          </label>
-
-          <img
-            id="photoPreview"
-            class="photo-preview"
-            alt="Product preview"
-          >
-
-          <div
-            id="photoName"
-            class="photo-name"
-          >
-            No photo selected
-          </div>
-
-        </div>
+        <img
+          id="imagePreview"
+          alt="Product preview"
+        >
 
       </div>
 
@@ -510,7 +482,65 @@ const API_URL = "/api/products";
 const AUTH_URL = "/api/admin";
 
 let products = [];
+
+/*
+  Selected photo is temporarily stored here.
+  It becomes a data URL such as:
+  data:image/jpeg;base64,...
+*/
 let selectedImageData = "";
+
+
+/* =========================
+   IMAGE UPLOAD
+========================= */
+
+function previewImage(event) {
+
+  const file = event.target.files[0];
+
+  if (!file) {
+    return;
+  }
+
+  if (!file.type.startsWith("image/")) {
+
+    alert("Please select an image.");
+
+    event.target.value = "";
+
+    return;
+  }
+
+  /*
+    Limit to approximately 2 MB.
+    This helps prevent very large database requests.
+  */
+  if (file.size > 2 * 1024 * 1024) {
+
+    alert("Image is too large. Please choose an image below 2 MB.");
+
+    event.target.value = "";
+
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+
+    selectedImageData = e.target.result;
+
+    const preview =
+      document.getElementById("imagePreview");
+
+    preview.src = selectedImageData;
+    preview.style.display = "block";
+
+  };
+
+  reader.readAsDataURL(file);
+}
 
 
 /* =========================
@@ -534,9 +564,13 @@ async function checkSession() {
       await response.json();
 
     if (data.authenticated) {
+
       showDashboard();
+
     } else {
+
       showLogin();
+
     }
 
   } catch {
@@ -657,6 +691,10 @@ async function login() {
 }
 
 
+/* =========================
+   LOGOUT
+========================= */
+
 async function logout() {
 
   await fetch(
@@ -673,152 +711,7 @@ async function logout() {
 
 
 /* =========================
-   PHOTO UPLOAD
-========================= */
-
-function handlePhoto(event) {
-
-  const file =
-    event.target.files[0];
-
-  if (!file) {
-    return;
-  }
-
-  if (!file.type.startsWith("image/")) {
-
-    alert("Please select an image.");
-
-    event.target.value = "";
-
-    return;
-  }
-
-  const maxSize =
-    10 * 1024 * 1024;
-
-  if (file.size > maxSize) {
-
-    alert(
-      "Image is too large. Please choose an image under 10MB."
-    );
-
-    event.target.value = "";
-
-    return;
-  }
-
-
-  const reader =
-    new FileReader();
-
-
-  reader.onload = function(e) {
-
-    const image =
-      new Image();
-
-
-    image.onload = function() {
-
-      const maxWidth = 1000;
-      const maxHeight = 1000;
-
-      let width =
-        image.width;
-
-      let height =
-        image.height;
-
-
-      if (width > maxWidth) {
-
-        height =
-          height *
-          (maxWidth / width);
-
-        width =
-          maxWidth;
-
-      }
-
-
-      if (height > maxHeight) {
-
-        width =
-          width *
-          (maxHeight / height);
-
-        height =
-          maxHeight;
-
-      }
-
-
-      const canvas =
-        document.createElement("canvas");
-
-      canvas.width =
-        Math.round(width);
-
-      canvas.height =
-        Math.round(height);
-
-
-      const ctx =
-        canvas.getContext("2d");
-
-
-      ctx.drawImage(
-        image,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
-
-
-      selectedImageData =
-        canvas.toDataURL(
-          "image/jpeg",
-          0.75
-        );
-
-
-      const preview =
-        document.getElementById(
-          "photoPreview"
-        );
-
-
-      preview.src =
-        selectedImageData;
-
-      preview.style.display =
-        "block";
-
-
-      document.getElementById(
-        "photoName"
-      ).textContent =
-        file.name;
-
-    };
-
-
-    image.src =
-      e.target.result;
-
-  };
-
-
-  reader.readAsDataURL(file);
-
-}
-
-
-/* =========================
-   PRODUCTS
+   LOAD PRODUCTS
 ========================= */
 
 async function loadProducts() {
@@ -857,6 +750,10 @@ async function loadProducts() {
 }
 
 
+/* =========================
+   SECURITY
+========================= */
+
 function escapeHTML(value) {
 
   return String(value ?? "")
@@ -868,6 +765,10 @@ function escapeHTML(value) {
 
 }
 
+
+/* =========================
+   RENDER PRODUCTS
+========================= */
 
 function renderProducts() {
 
@@ -899,13 +800,19 @@ function renderProducts() {
 
     const image =
       product.image_url
-        ? `<img src="${escapeHTML(product.image_url)}" alt="">`
+        ? `
+          <img
+            class="product-image"
+            src="${escapeHTML(product.image_url)}"
+            alt="${escapeHTML(product.name)}"
+          >
+        `
         : "";
 
 
     item.innerHTML = `
 
-      <div class="product-info">
+      <div class="product-left">
 
         ${image}
 
@@ -928,6 +835,7 @@ function renderProducts() {
         </div>
 
       </div>
+
 
       <div class="actions">
 
@@ -958,7 +866,7 @@ function renderProducts() {
 
 
 /* =========================
-   EDIT
+   EDIT PRODUCT
 ========================= */
 
 function editProduct(id) {
@@ -995,32 +903,25 @@ function editProduct(id) {
     product.description || "";
 
 
+  /*
+    Keep existing product image.
+  */
+
   selectedImageData =
     product.image_url || "";
 
 
   const preview =
-    document.getElementById(
-      "photoPreview"
-    );
+    document.getElementById("imagePreview");
 
 
-  const photoName =
-    document.getElementById(
-      "photoName"
-    );
-
-
-  if (product.image_url) {
+  if (selectedImageData) {
 
     preview.src =
-      product.image_url;
+      selectedImageData;
 
     preview.style.display =
       "block";
-
-    photoName.textContent =
-      "Current product photo";
 
   } else {
 
@@ -1029,9 +930,6 @@ function editProduct(id) {
 
     preview.style.display =
       "none";
-
-    photoName.textContent =
-      "No photo selected";
 
   }
 
@@ -1049,7 +947,7 @@ function editProduct(id) {
 
 
 /* =========================
-   CLEAR
+   CLEAR FORM
 ========================= */
 
 function clearForm() {
@@ -1076,7 +974,7 @@ function clearForm() {
     "";
 
 
-  document.getElementById("photoInput").value =
+  document.getElementById("imageFile").value =
     "";
 
 
@@ -1084,19 +982,15 @@ function clearForm() {
     "";
 
 
-  document.getElementById(
-    "photoPreview"
-  ).src = "";
-
-  document.getElementById(
-    "photoPreview"
-  ).style.display = "none";
+  const preview =
+    document.getElementById("imagePreview");
 
 
-  document.getElementById(
-    "photoName"
-  ).textContent =
-    "No photo selected";
+  preview.src =
+    "";
+
+  preview.style.display =
+    "none";
 
 
   document.getElementById("formTitle").textContent =
@@ -1106,7 +1000,7 @@ function clearForm() {
 
 
 /* =========================
-   SAVE
+   SAVE PRODUCT
 ========================= */
 
 async function saveProduct() {
@@ -1236,7 +1130,7 @@ async function saveProduct() {
 
 
 /* =========================
-   DELETE
+   DELETE PRODUCT
 ========================= */
 
 async function deleteProduct(id) {
@@ -1320,10 +1214,13 @@ async function deleteProduct(id) {
 }
 
 
+/* =========================
+   START
+========================= */
+
 checkSession();
 
 </script>
 
 </body>
-  </html>
-  
+</html>
