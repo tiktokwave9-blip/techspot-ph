@@ -35,7 +35,8 @@ header {
   color: #1683ff;
 }
 
-.message-btn {
+.message-btn,
+.modal-message {
   display: inline-block;
   background: #087ff5;
   color: white;
@@ -43,6 +44,8 @@ header {
   border-radius: 12px;
   text-decoration: none;
   font-weight: 700;
+  border: 0;
+  cursor: pointer;
 }
 
 .hero {
@@ -162,7 +165,7 @@ section {
   color: #bbb;
 }
 
-/* MODAL */
+/* MODALS */
 
 .modal {
   position: fixed;
@@ -240,17 +243,67 @@ section {
   margin-bottom: 20px;
 }
 
-.modal-message {
+/* MESSAGE FORM */
+
+.message-form {
+  display: none;
+}
+
+.message-form.show {
   display: block;
+}
+
+.message-form label {
+  display: block;
+  color: #aaa;
+  margin: 15px 0 7px;
+}
+
+.message-form input,
+.message-form textarea {
   width: 100%;
-  text-align: center;
+  background: #080808;
+  border: 1px solid #333;
+  color: white;
+  border-radius: 10px;
+  padding: 13px;
+  font-size: 16px;
+  outline: none;
+}
+
+.message-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.send-button {
+  width: 100%;
+  margin-top: 15px;
   background: #087ff5;
-  color: #fff;
-  text-decoration: none;
-  padding: 15px;
+  color: white;
+  border: 0;
+  padding: 14px;
   border-radius: 12px;
   font-weight: 700;
-  font-size: 17px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.cancel-button {
+  width: 100%;
+  margin-top: 8px;
+  background: #222;
+  color: white;
+  border: 0;
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.message-status {
+  margin-top: 12px;
+  color: #aaa;
+  text-align: center;
 }
 
 footer {
@@ -323,14 +376,13 @@ footer {
     TECH<span class="blue">SPOT</span> PH
   </div>
 
-  <a
+  <button
     class="message-btn"
-    href="https://m.me/61593245291078"
-    target="_blank"
-    rel="noopener"
+    type="button"
+    onclick="openMessageBox()"
   >
     💬 MESSAGE US
-  </a>
+  </button>
 
 </header>
 
@@ -344,373 +396,4 @@ footer {
 
   <h1>
     YOUR ONE-STOP SHOP FOR ALL YOUR
-    <span class="blue">TECH NEEDS.</span>
-  </h1>
-
-  <p>
-    iPhones, Android phones, laptops, computers and cameras.
-    Quality checked and customer-focused service.
-  </p>
-
-</section>
-
-
-<section class="products">
-
-  <h2>AVAILABLE PRODUCTS</h2>
-
-  <p class="muted">
-    Browse our available units. Tap a product to view details.
-  </p>
-
-  <div
-    id="productGrid"
-    class="product-grid"
-  ></div>
-
-  <div
-    id="loading"
-    class="loading"
-  >
-    Loading products...
-  </div>
-
-</section>
-
-</main>
-
-
-<!-- PRODUCT DETAILS MODAL -->
-
-<div
-  id="productModal"
-  class="modal"
->
-
-  <div class="modal-box">
-
-    <button
-      class="close"
-      onclick="closeProduct()"
-      aria-label="Close"
-    >
-      ×
-    </button>
-
-    <div
-      id="detailImage"
-      class="detail-image"
-    >
-      PRODUCT IMAGE
-    </div>
-
-    <h2 id="productName"></h2>
-
-    <div
-      id="productPrice"
-      class="modal-price"
-    ></div>
-
-    <div
-      id="productRating"
-      class="rating"
-    ></div>
-
-    <div
-      id="productDescription"
-      class="modal-description"
-    ></div>
-
-    <div
-      id="productStock"
-      class="modal-stock"
-    ></div>
-
-    <a
-      id="messengerButton"
-      class="modal-message"
-      href="#"
-      target="_blank"
-      rel="noopener"
-    >
-      💬 MESSAGE US ABOUT THIS UNIT
-    </a>
-
-  </div>
-
-</div>
-
-
-<footer>
-
-  <div class="logo">
-    TECH<span class="blue">SPOT</span> PH
-  </div>
-
-  <a
-    class="message-btn"
-    href="https://m.me/61593245291078"
-    target="_blank"
-    rel="noopener"
-  >
-    MESSAGE US
-  </a>
-
-</footer>
-
-
-<script>
-
-const API_URL = "/api/products";
-
-const productGrid =
-  document.getElementById("productGrid");
-
-const loading =
-  document.getElementById("loading");
-
-const modal =
-  document.getElementById("productModal");
-
-
-function formatPrice(price) {
-
-  const number = Number(price);
-
-  if (Number.isNaN(number)) {
-    return price;
-  }
-
-  return "₱" + number.toLocaleString("en-PH", {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2
-  });
-}
-
-
-function escapeHTML(value) {
-
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-
-
-function createProductCard(product) {
-
-  const card = document.createElement("div");
-
-  card.className = "product";
-
-  const imageURL = product.image_url || "";
-
-  const imageHTML = imageURL
-    ? `<img src="${escapeHTML(imageURL)}" alt="${escapeHTML(product.name)}" onerror="this.style.display='none'; this.parentElement.innerHTML='PRODUCT IMAGE';">`
-    : "PRODUCT IMAGE";
-
-  const rating = product.rating
-    ? `⭐ ${escapeHTML(product.rating)}`
-    : "";
-
-  const stock = product.stock !== undefined
-    ? `${escapeHTML(product.stock)} in stock`
-    : "";
-
-  card.innerHTML = `
-    <div class="product-image">
-      ${imageHTML}
-    </div>
-
-    <h3>${escapeHTML(product.name)}</h3>
-
-    <div class="price">
-      ${formatPrice(product.price)}
-    </div>
-
-    <div class="rating">
-      ${rating}
-    </div>
-
-    <div class="stock">
-      ${stock}
-    </div>
-  `;
-
-  card.addEventListener("click", function() {
-    openProduct(product);
-  });
-
-  return card;
-}
-
-
-async function loadProducts() {
-
-  loading.style.display = "block";
-
-  productGrid.innerHTML = "";
-
-  try {
-
-    const response =
-      await fetch(API_URL, {
-        method: "GET",
-        headers: {
-          "Accept": "application/json"
-        },
-        cache: "no-store"
-      });
-
-    if (!response.ok) {
-      throw new Error(
-        "API returned HTTP " + response.status
-      );
-    }
-
-    const products =
-      await response.json();
-
-    loading.style.display = "none";
-
-    if (!Array.isArray(products) || products.length === 0) {
-
-      productGrid.innerHTML = `
-        <div class="empty">
-          No products available right now.
-        </div>
-      `;
-
-      return;
-    }
-
-    products.forEach(function(product) {
-
-      productGrid.appendChild(
-        createProductCard(product)
-      );
-
-    });
-
-  } catch (error) {
-
-    console.error("Product loading error:", error);
-
-    loading.style.display = "none";
-
-    productGrid.innerHTML = `
-      <div class="error">
-        Unable to load products right now.
-        Please try again later.
-      </div>
-    `;
-  }
-}
-
-
-function openProduct(product) {
-
-  document.getElementById("productName").textContent =
-    product.name || "Product";
-
-  document.getElementById("productPrice").textContent =
-    formatPrice(product.price);
-
-  document.getElementById("productDescription").textContent =
-    product.description ||
-    "Quality checked and ready for purchase.";
-
-  document.getElementById("productStock").textContent =
-    product.stock !== undefined
-      ? "Stock: " + product.stock
-      : "";
-
-  document.getElementById("productRating").textContent =
-    product.rating
-      ? "⭐ " + product.rating +
-        (product.rating_count
-          ? " (" + product.rating_count + " ratings)"
-          : "")
-      : "";
-
-
-  const detailImage =
-    document.getElementById("detailImage");
-
-  if (product.image_url) {
-
-    detailImage.innerHTML = `
-      <img
-        src="${escapeHTML(product.image_url)}"
-        alt="${escapeHTML(product.name)}"
-        onerror="this.style.display='none'; this.parentElement.innerHTML='PRODUCT IMAGE';"
-      >
-    `;
-
-  } else {
-
-    detailImage.textContent =
-      "PRODUCT IMAGE";
-  }
-
-
-  const message =
-    "Hi TechSpot PH! I'm interested in the " +
-    (product.name || "product") +
-    ". Is this still available?";
-
-
-  const messengerURL =
-    "https://m.me/61593245291078?text=" +
-    encodeURIComponent(message);
-
-
-  document.getElementById("messengerButton").href =
-    messengerURL;
-
-
-  modal.classList.add("show");
-}
-
-
-function closeProduct() {
-
-  modal.classList.remove("show");
-
-}
-
-
-modal.addEventListener(
-  "click",
-  function(event) {
-
-    if (event.target === modal) {
-      closeProduct();
-    }
-
-  }
-);
-
-
-document.addEventListener(
-  "keydown",
-  function(event) {
-
-    if (event.key === "Escape") {
-      closeProduct();
-    }
-
-  }
-);
-
-
-/* LOAD PRODUCTS */
-
-loadProducts();
-
-</script>
-
-</body>
-</html>
+   
