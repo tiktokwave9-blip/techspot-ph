@@ -4,208 +4,319 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#050505">
-<title>TechSpot PH — Premium Tech Store</title>
+
+<title>TechSpot PH | Phones, Laptops & Cameras</title>
 
 <style>
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
 body{
   margin:0;
   background:#050505;
   color:#fff;
   font-family:Arial,Helvetica,sans-serif;
 }
-a{text-decoration:none;color:inherit}
-button{font:inherit}
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+button{
+  font:inherit;
+}
+
+/* HEADER */
 
 .header{
   position:sticky;
   top:0;
   z-index:1000;
-  background:rgba(5,5,5,.94);
-  backdrop-filter:blur(14px);
+  background:rgba(5,5,5,.96);
+  backdrop-filter:blur(15px);
   border-bottom:1px solid #202020;
 }
+
 .nav{
   max-width:1250px;
-  margin:auto;
   min-height:78px;
-  padding:0 24px;
+  margin:auto;
+  padding:10px 22px;
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:20px;
 }
-.logo{
-  font-size:25px;
-  font-weight:900;
-  letter-spacing:-1px;
-  white-space:nowrap;
-}
-.logo span{color:#fff}
-.logo em{
-  color:#888;
-  font-style:normal;
-  font-size:13px;
-  margin-left:6px;
-  letter-spacing:1px;
-}
-.navlinks{
+
+.brand{
   display:flex;
   align-items:center;
-  gap:28px;
-  color:#bbb;
+  gap:12px;
+}
+
+.brand img{
+  width:55px;
+  height:55px;
+  object-fit:contain;
+  border-radius:50%;
+}
+
+.brand-name{
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:-.5px;
+}
+
+.brand-name span{
+  color:#087ff5;
+}
+
+.brand-sub{
+  display:block;
+  color:#777;
+  font-size:10px;
+  letter-spacing:2px;
+  margin-top:2px;
+}
+
+.nav-links{
+  display:flex;
+  gap:25px;
+  color:#aaa;
   font-size:14px;
   font-weight:700;
 }
-.navlinks a:hover{color:#fff}
+
+.nav-links a:hover{
+  color:#1683ff;
+}
 
 .message-btn{
-  background:#fff;
-  color:#050505;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#087ff5;
+  color:#fff;
   padding:12px 18px;
-  border-radius:999px;
-  font-weight:800;
+  border-radius:10px;
   font-size:14px;
+  font-weight:900;
   transition:.2s;
+  box-shadow:0 8px 25px rgba(8,127,245,.18);
 }
+
 .message-btn:hover{
+  background:#168fff;
   transform:translateY(-2px);
-  background:#e9e9e9;
 }
+
+/* HERO */
 
 .hero{
   position:relative;
-  min-height:650px;
-  overflow:hidden;
+  min-height:610px;
   display:flex;
   align-items:center;
-  background:
-    radial-gradient(circle at 80% 50%,#292929 0,transparent 36%),
-    linear-gradient(110deg,#050505 0%,#090909 55%,#171717 100%);
+  overflow:hidden;
+  background:#050505;
 }
 
-.hero-photo{
+.hero-banner{
   position:absolute;
-  inset:0 0 0 42%;
-  background-image:
-    linear-gradient(90deg,#050505 0%,rgba(5,5,5,.78) 18%,rgba(5,5,5,.12) 70%),
-    url("images/hero.jpg");
-  background-size:cover;
-  background-position:center;
-  opacity:.92;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
 }
 
-.hero-inner{
+.hero-overlay{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0,0,0,.97) 0%,
+      rgba(0,0,0,.88) 28%,
+      rgba(0,0,0,.45) 62%,
+      rgba(0,0,0,.25) 100%
+    );
+}
+
+.hero-blue{
+  position:absolute;
+  width:450px;
+  height:450px;
+  right:-180px;
+  top:-180px;
+  background:#087ff5;
+  opacity:.15;
+  filter:blur(100px);
+  border-radius:50%;
+}
+
+.hero-content{
   position:relative;
-  z-index:2;
+  z-index:3;
   width:min(1250px,100%);
   margin:auto;
-  padding:90px 24px;
+  padding:90px 22px;
 }
 
-.kicker{
-  color:#aaa;
-  text-transform:uppercase;
-  letter-spacing:2px;
+.hero-small{
+  color:#1683ff;
   font-size:13px;
-  font-weight:800;
+  font-weight:900;
+  letter-spacing:3px;
+  text-transform:uppercase;
 }
 
 .hero h1{
-  max-width:760px;
+  max-width:750px;
   margin:15px 0;
-  font-size:clamp(43px,7vw,78px);
+  font-size:clamp(43px,7vw,76px);
   line-height:.98;
   letter-spacing:-3px;
 }
 
-.hero h1 strong{color:#aaa}
+.hero h1 span{
+  color:#1683ff;
+}
 
 .hero p{
-  max-width:600px;
-  color:#c7c7c7;
+  max-width:620px;
+  color:#ccc;
   font-size:18px;
   line-height:1.6;
 }
 
-.hero-actions{
+.hero-buttons{
   display:flex;
+  flex-wrap:wrap;
   gap:12px;
   margin-top:28px;
-  flex-wrap:wrap;
 }
 
-.primary{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  background:#fff;
-  color:#050505;
-  padding:14px 22px;
-  border-radius:12px;
+.shop-btn{
+  background:#087ff5;
+  color:#fff;
+  padding:14px 23px;
+  border-radius:11px;
   font-weight:900;
 }
 
-.secondary{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  border:1px solid #444;
-  color:#fff;
-  padding:14px 22px;
-  border-radius:12px;
-  font-weight:800;
-  background:#111;
+.hero-message{
+  background:#fff;
+  color:#050505;
+  padding:14px 23px;
+  border-radius:11px;
+  font-weight:900;
 }
 
-.hero-badge{
-  display:inline-flex;
-  gap:10px;
-  align-items:center;
+.trust{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
   margin-top:35px;
-  padding:10px 14px;
+}
+
+.trust span{
   border:1px solid #333;
+  background:rgba(0,0,0,.6);
+  padding:9px 13px;
   border-radius:999px;
-  background:rgba(10,10,10,.7);
   color:#bbb;
+  font-size:12px;
+}
+
+/* STRIP */
+
+.features{
+  border-top:1px solid #222;
+  border-bottom:1px solid #222;
+  background:#090909;
+}
+
+.features-inner{
+  max-width:1250px;
+  margin:auto;
+  padding:25px 22px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+}
+
+.feature{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+
+.feature-icon{
+  width:42px;
+  height:42px;
+  border-radius:10px;
+  background:#101010;
+  border:1px solid #292929;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#1683ff;
+  font-size:20px;
+}
+
+.feature strong{
+  display:block;
   font-size:13px;
 }
 
-.section{
+.feature small{
+  color:#777;
+  font-size:11px;
+}
+
+/* PRODUCTS */
+
+.products{
   max-width:1250px;
   margin:auto;
-  padding:75px 24px;
+  padding:75px 22px;
 }
 
-.section-head{
-  display:flex;
-  align-items:end;
-  justify-content:space-between;
-  gap:20px;
+.section-label{
+  color:#1683ff;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:2px;
+  text-transform:uppercase;
 }
 
-.section h2{
+.products h2{
+  margin:8px 0;
   font-size:38px;
-  margin:0 0 8px;
   letter-spacing:-1px;
 }
 
-.muted{
+.section-desc{
   color:#888;
   margin:0;
-  line-height:1.5;
 }
 
 .product-grid{
   display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-columns:repeat(4,1fr);
   gap:18px;
   margin-top:35px;
 }
 
 .product{
-  background:#0d0d0d;
+  background:#0c0c0c;
   border:1px solid #242424;
   border-radius:18px;
   overflow:hidden;
@@ -214,98 +325,69 @@ button{font:inherit}
 }
 
 .product:hover{
-  transform:translateY(-4px);
-  border-color:#555;
+  transform:translateY(-5px);
+  border-color:#087ff5;
+  box-shadow:0 15px 40px rgba(0,0,0,.45);
 }
 
 .product-image{
-  height:235px;
-  background:#151515;
+  height:230px;
+  background:#141414;
   display:flex;
   align-items:center;
   justify-content:center;
-  color:#666;
   overflow:hidden;
+  color:#666;
 }
 
 .product-image img{
   width:100%;
   height:100%;
   object-fit:cover;
+  transition:.3s;
 }
 
-.product-info{padding:17px}
+.product:hover .product-image img{
+  transform:scale(1.04);
+}
+
+.product-info{
+  padding:17px;
+}
 
 .product h3{
-  margin:0 0 8px;
+  margin:0 0 9px;
   font-size:18px;
 }
 
 .price{
+  color:#1683ff;
   font-size:20px;
   font-weight:900;
 }
 
 .rating{
-  color:#ddd;
-  font-size:13px;
   margin-top:8px;
+  color:#ffc107;
+  font-size:13px;
 }
 
 .stock{
   color:#777;
-  font-size:13px;
-  margin-top:7px;
+  font-size:12px;
+  margin-top:8px;
 }
 
-.loading,.empty,.error{
+.loading,
+.error,
+.empty{
   margin-top:30px;
-  padding:30px;
+  padding:28px;
   text-align:center;
   border:1px solid #252525;
   border-radius:18px;
   background:#0d0d0d;
-  color:#999;
-}
-
-.info-strip{
-  border-top:1px solid #222;
-  border-bottom:1px solid #222;
-  background:#0a0a0a;
-}
-
-.info-grid{
-  max-width:1250px;
-  margin:auto;
-  padding:26px 24px;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:20px;
-}
-
-.info-item strong{
-  display:block;
-  margin-bottom:5px;
-}
-
-.info-item span{
   color:#888;
-  font-size:13px;
-}
-
-.footer{
-  border-top:1px solid #222;
-  padding:35px 24px;
-  color:#888;
-}
-
-.footer-inner{
-  max-width:1250px;
-  margin:auto;
-  display:flex;
-  justify-content:space-between;
-  gap:20px;
-  align-items:center;
 }
 
 /* MODAL */
@@ -314,7 +396,7 @@ button{font:inherit}
   position:fixed;
   inset:0;
   z-index:9999;
-  background:rgba(0,0,0,.82);
+  background:rgba(0,0,0,.85);
   display:none;
   align-items:center;
   justify-content:center;
@@ -373,14 +455,14 @@ button{font:inherit}
 }
 
 .modal-price{
+  color:#1683ff;
   font-size:25px;
   font-weight:900;
-  margin-bottom:12px;
 }
 
 .modal-rating{
-  color:#ddd;
-  margin-bottom:15px;
+  color:#ffc107;
+  margin:10px 0;
 }
 
 .modal-description{
@@ -390,61 +472,111 @@ button{font:inherit}
 
 .modal-stock{
   color:#888;
-  margin:16px 0;
+  margin:15px 0 20px;
 }
 
 .modal-message{
   display:block;
+  width:100%;
   text-align:center;
-  background:#fff;
-  color:#050505;
+  background:#087ff5;
+  color:#fff;
   padding:15px;
-  border-radius:12px;
+  border-radius:11px;
   font-weight:900;
 }
 
-@media(max-width:900px){
+/* FOOTER */
 
-  .navlinks{
+footer{
+  border-top:1px solid #222;
+  background:#080808;
+}
+
+.footer-inner{
+  max-width:1250px;
+  margin:auto;
+  padding:35px 22px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.footer-brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.footer-brand img{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+}
+
+.copyright{
+  color:#666;
+  font-size:12px;
+}
+
+/* MOBILE */
+
+@media(max-width:950px){
+
+  .nav-links{
     display:none;
   }
 
   .product-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr));
+    grid-template-columns:repeat(2,1fr);
   }
 
-  .hero-photo{
-    inset:0;
-    opacity:.38;
+  .features-inner{
+    grid-template-columns:repeat(2,1fr);
   }
 
-  .hero{
-    min-height:600px;
+  .hero-banner{
+    object-position:center;
   }
+
 }
 
 @media(max-width:600px){
 
   .nav{
-    min-height:68px;
-    padding:0 16px;
+    padding:8px 14px;
   }
 
-  .logo{
-    font-size:21px;
+  .brand img{
+    width:46px;
+    height:46px;
   }
 
-  .logo em{
-    display:none;
+  .brand-name{
+    font-size:18px;
   }
 
   .message-btn{
-    padding:10px 14px;
-    font-size:12px;
+    padding:10px 12px;
+    font-size:11px;
   }
 
-  .hero-inner{
-    padding:80px 18px;
+  .hero{
+    min-height:650px;
+  }
+
+  .hero-overlay{
+    background:
+      linear-gradient(
+        90deg,
+        rgba(0,0,0,.95),
+        rgba(0,0,0,.7)
+      );
+  }
+
+  .hero-content{
+    padding:80px 17px;
   }
 
   .hero h1{
@@ -456,11 +588,20 @@ button{font:inherit}
     font-size:16px;
   }
 
-  .section{
-    padding:55px 16px;
+  .features-inner{
+    grid-template-columns:1fr 1fr;
+    padding:20px 14px;
   }
 
-  .section h2{
+  .feature{
+    align-items:flex-start;
+  }
+
+  .products{
+    padding:55px 14px;
+  }
+
+  .products h2{
     font-size:30px;
   }
 
@@ -484,18 +625,15 @@ button{font:inherit}
     font-size:17px;
   }
 
-  .info-grid{
-    grid-template-columns:1fr;
-    padding:22px 16px;
-  }
-
   .footer-inner{
     flex-direction:column;
     text-align:center;
   }
+
 }
 </style>
 </head>
+
 
 <body>
 
@@ -503,22 +641,46 @@ button{font:inherit}
 
 <nav class="nav">
 
-<a class="logo" href="#">
-TECH<span>SPOT</span> PH
-<em>TECH STORE</em>
-</a>
+<div class="brand">
 
-<div class="navlinks">
-<a href="#products">Products</a>
-<a href="#about">Why TechSpot</a>
+<img
+src="images/logo.png"
+alt="TechSpot PH Logo"
+onerror="this.style.display='none'"
+>
+
+<div>
+<div class="brand-name">
+TECH<span>SPOT</span> PH
 </div>
 
-<!-- WORKING MESSENGER CONNECTION -->
+<span class="brand-sub">
+TECH STORE
+</span>
+</div>
+
+</div>
+
+
+<div class="nav-links">
+
+<a href="#products">
+Products
+</a>
+
+<a href="#why">
+Why TechSpot
+</a>
+
+</div>
+
+
 <a
 class="message-btn"
 href="https://m.me/61593245291078"
 target="_blank"
-rel="noopener">
+rel="noopener"
+>
 💬 MESSAGE US
 </a>
 
@@ -527,47 +689,65 @@ rel="noopener">
 </header>
 
 
-<main>
-
 <section class="hero">
 
-<div class="hero-photo"></div>
+<img
+class="hero-banner"
+src="images/banner.png"
+alt="TechSpot PH"
+>
 
-<div class="hero-inner">
+<div class="hero-overlay"></div>
 
-<div class="kicker">
-Welcome to TechSpot PH
+<div class="hero-blue"></div>
+
+
+<div class="hero-content">
+
+<div class="hero-small">
+WELCOME TO TECHSPOT PH
 </div>
 
 <h1>
-PREMIUM TECH.<br>
-<strong>SMART CHOICES.</strong>
+YOUR TECH.<br>
+YOUR <span>CHOICE.</span>
 </h1>
 
 <p>
-Phones, laptops, computers and cameras.
-Browse available units, check the details, then message
-TechSpot PH directly for availability.
+Phones, Android devices, laptops, computers and cameras.
+Browse our available products and message us directly
+for availability and inquiries.
 </p>
 
-<div class="hero-actions">
 
-<a class="primary" href="#products">
-SHOP PRODUCTS
-</a>
+<div class="hero-buttons">
 
 <a
-class="secondary"
+class="shop-btn"
+href="#products"
+>
+VIEW PRODUCTS
+</a>
+
+
+<a
+class="hero-message"
 href="https://m.me/61593245291078"
 target="_blank"
-rel="noopener">
-MESSAGE US
+rel="noopener"
+>
+💬 MESSAGE US
 </a>
 
 </div>
 
-<div class="hero-badge">
-● Quality checked &nbsp; • &nbsp; Customer-focused service
+
+<div class="trust">
+
+<span>✓ Quality Checked</span>
+<span>✓ Trusted Seller</span>
+<span>✓ Fast Support</span>
+
 </div>
 
 </div>
@@ -575,75 +755,134 @@ MESSAGE US
 </section>
 
 
-<div class="info-strip" id="about">
+<section class="features" id="why">
 
-<div class="info-grid">
+<div class="features-inner">
 
-<div class="info-item">
-<strong>Quality Checked</strong>
-<span>Units are listed with available details.</span>
+<div class="feature">
+
+<div class="feature-icon">
+✓
 </div>
-
-<div class="info-item">
-<strong>Easy Inquiry</strong>
-<span>Message us directly about any product.</span>
-</div>
-
-<div class="info-item">
-<strong>TechSpot PH</strong>
-<span>Your one-stop shop for tech needs.</span>
-</div>
-
-</div>
-
-</div>
-
-
-<section class="section" id="products">
-
-<div class="section-head">
 
 <div>
+<strong>Quality Products</strong>
+<small>Checked units</small>
+</div>
 
-<h2>AVAILABLE PRODUCTS</h2>
+</div>
 
-<p class="muted">
-Tap a product to view its full details.
+
+<div class="feature">
+
+<div class="feature-icon">
+★
+</div>
+
+<div>
+<strong>Trusted Seller</strong>
+<small>Customer-focused</small>
+</div>
+
+</div>
+
+
+<div class="feature">
+
+<div class="feature-icon">
+▣
+</div>
+
+<div>
+<strong>Easy Inquiry</strong>
+<small>Direct Messenger</small>
+</div>
+
+</div>
+
+
+<div class="feature">
+
+<div class="feature-icon">
+☎
+</div>
+
+<div>
+<strong>Fast Support</strong>
+<small>Message anytime</small>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<section class="products" id="products">
+
+<div class="section-label">
+TECHSPOT PH
+</div>
+
+<h2>
+AVAILABLE PRODUCTS
+</h2>
+
+<p class="section-desc">
+Browse available units. Tap a product to see complete details.
 </p>
 
+
+<div
+id="productGrid"
+class="product-grid"
+>
 </div>
 
-</div>
 
-<div id="productGrid" class="product-grid"></div>
-
-<div id="loading" class="loading">
+<div
+id="loading"
+class="loading"
+>
 Loading products...
 </div>
 
 </section>
 
-</main>
 
-
-<footer class="footer">
+<footer>
 
 <div class="footer-inner">
 
-<div class="logo">
-TECH<span>SPOT</span> PH
-</div>
+<div class="footer-brand">
+
+<img
+src="images/logo.png"
+alt="TechSpot PH"
+>
 
 <div>
+<strong>
+TECHSPOT PH
+</strong>
+
+<div class="copyright">
 © 2026 TechSpot PH
 </div>
+
+</div>
+
+</div>
+
 
 <a
 class="message-btn"
 href="https://m.me/61593245291078"
 target="_blank"
-rel="noopener">
-MESSAGE US
+rel="noopener"
+>
+💬 MESSAGE US
 </a>
 
 </div>
@@ -651,40 +890,73 @@ MESSAGE US
 </footer>
 
 
-<!-- PRODUCT MODAL -->
+<!-- PRODUCT DETAILS -->
 
-<div id="productModal" class="modal">
+<div
+id="productModal"
+class="modal"
+>
 
 <div class="modal-box">
 
 <button
 class="close"
 onclick="closeProduct()"
-aria-label="Close">
+aria-label="Close"
+>
 ×
 </button>
 
-<div id="detailImage" class="detail-image">
+
+<div
+id="detailImage"
+class="detail-image"
+>
 PRODUCT IMAGE
 </div>
 
-<h2 id="productName"></h2>
 
-<div id="productPrice" class="modal-price"></div>
+<h2
+id="productName"
+>
+</h2>
 
-<div id="productRating" class="modal-rating"></div>
 
-<div id="productDescription" class="modal-description"></div>
+<div
+id="productPrice"
+class="modal-price"
+>
+</div>
 
-<div id="productStock" class="modal-stock"></div>
 
-<!-- DIRECT MESSENGER CONNECTION -->
+<div
+id="productRating"
+class="modal-rating"
+>
+</div>
+
+
+<div
+id="productDescription"
+class="modal-description"
+>
+</div>
+
+
+<div
+id="productStock"
+class="modal-stock"
+>
+</div>
+
+
 <a
 id="messengerButton"
 class="modal-message"
 href="#"
 target="_blank"
-rel="noopener">
+rel="noopener"
+>
 💬 MESSAGE US ABOUT THIS UNIT
 </a>
 
@@ -723,18 +995,20 @@ return String(value ?? "")
 
 function formatPrice(value){
 
-const n = Number(value);
+const number = Number(value);
 
-if(!Number.isFinite(n)){
+if(!Number.isFinite(number)){
 return escapeHTML(value);
 }
 
-return "₱" + n.toLocaleString("en-PH",{
-
+return "₱" +
+number.toLocaleString(
+"en-PH",
+{
 minimumFractionDigits:0,
 maximumFractionDigits:2
-
-});
+}
+);
 
 }
 
@@ -747,13 +1021,14 @@ document.createElement("article");
 card.className = "product";
 
 
-const image =
+const imageHTML =
 product.image_url
 
 ? `<img
 src="${escapeHTML(product.image_url)}"
 alt="${escapeHTML(product.name)}"
-onerror="this.style.display='none';this.parentElement.textContent='PRODUCT IMAGE';">`
+onerror="this.style.display='none';this.parentElement.textContent='PRODUCT IMAGE';"
+>`
 
 : "PRODUCT IMAGE";
 
@@ -761,31 +1036,35 @@ onerror="this.style.display='none';this.parentElement.textContent='PRODUCT IMAGE
 const rating =
 product.rating
 
-? `⭐ ${escapeHTML(product.rating)}${
-product.rating_count
-? " · " +
-escapeHTML(product.rating_count) +
-" ratings"
-: ""
-}`
+? "⭐ " +
+escapeHTML(product.rating) +
 
-: "No rating yet";
+(
+product.rating_count
+? " (" +
+escapeHTML(product.rating_count) +
+" ratings)"
+: ""
+)
+
+: "";
 
 
 const stock =
 product.stock !== undefined
-
 ? escapeHTML(product.stock) +
 " in stock"
-
 : "";
 
 
 card.innerHTML = `
 
 <div class="product-image">
-${image}
+
+${imageHTML}
+
 </div>
+
 
 <div class="product-info">
 
@@ -812,10 +1091,11 @@ ${stock}
 
 card.addEventListener(
 "click",
-()=>{
+function(){
 openProduct(product);
 }
 );
+
 
 return card;
 
@@ -832,23 +1112,23 @@ productGrid.innerHTML = "";
 try{
 
 const response =
-await fetch(API_URL,{
-
+await fetch(
+API_URL,
+{
 method:"GET",
-
 headers:{
-Accept:"application/json"
+"Accept":"application/json"
 },
-
 cache:"no-store"
-
-});
+}
+);
 
 
 if(!response.ok){
 
 throw new Error(
-"HTTP " + response.status
+"API HTTP " +
+response.status
 );
 
 }
@@ -863,34 +1143,48 @@ loading.style.display = "none";
 
 if(
 !Array.isArray(products) ||
-!products.length
+products.length === 0
 ){
 
-productGrid.innerHTML =
-'<div class="empty">No products available right now.</div>';
+productGrid.innerHTML = `
+<div class="empty">
+No products available right now.
+</div>
+`;
 
 return;
 
 }
 
 
-products.forEach(product=>{
+products.forEach(
+function(product){
 
 productGrid.appendChild(
 createProductCard(product)
 );
 
-});
+}
+);
 
 
 }catch(error){
 
-console.error(error);
+console.error(
+"Product loading error:",
+error
+);
+
 
 loading.style.display = "none";
 
-productGrid.innerHTML =
-'<div class="error">Unable to load products right now. Please try again later.</div>';
+
+productGrid.innerHTML = `
+<div class="error">
+Unable to load products right now.
+Please try again later.
+</div>
+`;
 
 }
 
@@ -902,13 +1196,16 @@ function openProduct(product){
 document.getElementById(
 "productName"
 ).textContent =
-product.name || "Product";
+product.name ||
+"Product";
 
 
 document.getElementById(
 "productPrice"
 ).textContent =
-formatPrice(product.price);
+formatPrice(
+product.price
+);
 
 
 document.getElementById(
@@ -960,12 +1257,15 @@ document.getElementById(
 
 if(product.image_url){
 
-detailImage.innerHTML =
+detailImage.innerHTML = `
 
-`<img
+<img
 src="${escapeHTML(product.image_url)}"
 alt="${escapeHTML(product.name)}"
-onerror="this.style.display='none';this.parentElement.textContent='PRODUCT IMAGE';">`;
+onerror="this.style.display='none';this.parentElement.textContent='PRODUCT IMAGE';"
+>
+
+`;
 
 }else{
 
@@ -984,9 +1284,7 @@ const message =
 ". Is this still available?";
 
 
-document.getElementById(
-"messengerButton"
-).href =
+const messengerURL =
 
 "https://m.me/" +
 MESSENGER_ID +
@@ -994,21 +1292,31 @@ MESSENGER_ID +
 encodeURIComponent(message);
 
 
-modal.classList.add("show");
+document.getElementById(
+"messengerButton"
+).href =
+messengerURL;
+
+
+modal.classList.add(
+"show"
+);
 
 }
 
 
 function closeProduct(){
 
-modal.classList.remove("show");
+modal.classList.remove(
+"show"
+);
 
 }
 
 
 modal.addEventListener(
 "click",
-event=>{
+function(event){
 
 if(event.target === modal){
 
@@ -1016,12 +1324,13 @@ closeProduct();
 
 }
 
-});
+}
+);
 
 
 document.addEventListener(
 "keydown",
-event=>{
+function(event){
 
 if(event.key === "Escape"){
 
@@ -1029,7 +1338,8 @@ closeProduct();
 
 }
 
-});
+}
+);
 
 
 loadProducts();
